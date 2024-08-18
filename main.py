@@ -2,8 +2,6 @@
 import random
 
 # PEFAP Code
-from pefap.player import Player
-
 from pefap.game import Game
 
 def main():
@@ -14,7 +12,10 @@ def main():
     # Create a new game.
     game = Game(randomizePlayers)
     # Create some players.
-    game.createPlayers(5, 2)
+    game.createStandardPlayers(0)
+    game.createFairPlayers(3, True)
+    # Inform all players about the total amount of players.
+    game.informAboutAmountOfPlayers()
 
     # Run the game.
     game.run()

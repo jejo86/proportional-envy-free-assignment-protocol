@@ -1,6 +1,5 @@
 # Standard Library
 import random
-import sys
 
 class Player:
     """A player of the proportional, envy-free assignment protocol."""
@@ -36,17 +35,22 @@ class Player:
 
     def checkIfCakeIsDesirable(self, cake):
         # Check if there is enough cake left to get the desired portion.
-        if self.desiredPercentOfCake <= cake.sizeInPercent - sys.float_info.min:
+        if self.desiredPercentOfCake < cake.sizeInPercent - cake.smallestFraction:
+            # I can cut off a piece and would still be happy with it.
             return True
-        
-        # That is too little cake for me.
-        print(f"{type(self).__name__} {self.identifier}: {cake.sizeInPercent:.3f} % is too little for me... I want at least {self.desiredPercentOfCake:.3f} %")
-        return False
+        elif self.desiredPercentOfCake == cake.sizeInPercent:
+            # I cannot cut off a piece, that would make it too small.
+            print(f"{type(self).__name__} {self.identifier}: {cake.sizeInPercent:.3f} % is exactly right, but I won't cut off more!")
+            return False
+        else:       
+            # That is too little cake for me.
+            print(f"{type(self).__name__} {self.identifier}: {cake.sizeInPercent:.3f} % is too little for me... I want at least {self.desiredPercentOfCake:.3f} %")
+            return False
 
     def chooseWhichCakeSizeToTryToKeep(self, cake):
         """Choose which cake size to try to keep."""
         # Try to keep the entire piece of cake minus the smallest fraction 
         # possible to comply to the rules of the game.
         print(f"{type(self).__name__} {self.identifier}: I am reducing the cake size by the smallest fraction possible!")
-        return cake.sizeInPercent - sys.float_info.min
+        return cake.sizeInPercent - cake.smallestFraction
 

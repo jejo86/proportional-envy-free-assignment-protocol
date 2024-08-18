@@ -3,6 +3,9 @@ class Cake:
 
     sizeInPercent = 0.0
 
+    # Define the smallest fraction of cake allowed.
+    smallestFraction = 0.001
+
     owningPlayer = None
 
     def __init__(self, sizeInPercent = 100.0):

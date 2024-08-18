@@ -18,8 +18,6 @@ class Player:
     def __init__(self, identifier):
         """Constructor setting a player identifier."""
         self.identifier = identifier
-        # Set a value for the desired percent of cake.
-        self.desiredPercentOfCake = round(random.random() * 100, 3)
 
     def __str__(self) -> str:
         return f"{type(self).__name__} {self.identifier}: Desired: {self.desiredPercentOfCake:.3f}% / Others: {self.otherPlayersDeservedPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
@@ -31,6 +29,10 @@ class Player:
 
         # Only before the game starts.     
         if game.currentRound == 0:
+            # Set a value for the desired percent of cake.
+            self.desiredPercentOfCake = abs(round(random.gauss(100/self.amountOfActivePlayers, 100/self.amountOfActivePlayers), 3))
+            #self.desiredPercentOfCake = round(100/self.amountOfActivePlayers, 3)
+            #self.desiredPercentOfCake = round(self.identifier*100.0/self.amountOfActivePlayers, 3)
             # Set how much cake the others deserve, knowing how much there are.
             self.updateAmountTheOthersDeserve(game.cake.sizeInPercent)   
 
@@ -45,7 +47,7 @@ class Player:
     def updateAmountTheOthersDeserve(self, cakeSizeInPercent):
         """Update the amount the others deserve."""
         # Divide the remaining percent by the amount of players.
-        self.otherPlayersDeservedPercentOfCake = round((cakeSizeInPercent-self.desiredPercentOfCake)/self.amountOfActivePlayers, 3)
+        self.otherPlayersDeservedPercentOfCake = round((cakeSizeInPercent-self.desiredPercentOfCake)/(self.amountOfActivePlayers-1), 3)
 
     def cutInitialPieceOfCake(self, cake):
         # Split the cake, if there are only two players left.
@@ -86,13 +88,14 @@ class Player:
 
     def chooseWhichCakeSizeToTryToKeep(self, cake):
         """Choose which cake size to try to keep."""
-        if self.playersAfter == 0:
+        if self.playersAfter == 0 or (cake.sizeInPercent - cake.smallestFraction < self.otherPlayersDeservedPercentOfCake):
             # Try to keep the entire piece of cake minus the smallest fraction 
             # possible to comply to the rules of the game.
             print(f"{type(self).__name__} {self.identifier}: I am reducing the cake size by the smallest fraction possible!")
             return cake.sizeInPercent - cake.smallestFraction
         else:
             # There are players after me. Make sure they don't get more than they deserve.
+            # Check if the current suggestion is larger.               
             print(f"{type(self).__name__} {self.identifier}: I am reducing the cake to the maximum {self.otherPlayersDeservedPercentOfCake} the others deserve!")
             return self.otherPlayersDeservedPercentOfCake
 

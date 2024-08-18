@@ -44,12 +44,10 @@ class Cake:
 
     def setOwner(self, player):
         """Set the owner of this piece of cake."""
-        # Make sure this cake is not negligible.
-        if self.sizeInPercent >= self.smallestFraction:
-            # Associate a player to this piece of cake.
-            self.owningPlayer = player
-            # Associate this piece of cake to the player.
-            self.owningPlayer.ownedPieceOfCake = self
+        # Associate a player to this piece of cake.
+        self.owningPlayer = player
+        # Associate this piece of cake to the player.
+        self.owningPlayer.ownedPieceOfCake = self
 
     def removeOwner(self):
         """Remove the ownership of this piece of cake."""

@@ -22,12 +22,12 @@ class Player:
         self.desiredPercentOfCake = random.random() * 100
 
     def __str__(self) -> str:
-        return f"{type(self).__name__} {self.identifier} - Desired: {self.desiredPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
+        return f"{type(self).__name__} {self.identifier}: Desired: {self.desiredPercentOfCake:.3f}% / Others: {self.otherPlayersDeservedPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
     
     def informAboutGameState(self, game):
         """Inform the player about the current game state."""
         # Set how much cake the others deserve.
-        self.otherPlayersDeservedPercentOfCake = 1/game.amountOfPlayers * 100   
+        self.otherPlayersDeservedPercentOfCake = min(self.desiredPercentOfCake, random.random() * 100)   
         # Save the amount of active players.
         self.amountOfActivePlayers = len(game.activePlayers)
 

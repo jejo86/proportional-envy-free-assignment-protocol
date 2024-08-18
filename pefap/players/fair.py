@@ -15,7 +15,8 @@ class FairPlayer (Player):
         # Call the super method.
         super().informAboutGameState(game)
         # The fair player sets a fair amount of desired percentage of cake.
-        self.desiredPercentOfCake = 1/game.amountOfPlayers
+        self.desiredPercentOfCake = 1/game.amountOfPlayers * 100
+        self.otherPlayersDeservedPercentOfCake = self.desiredPercentOfCake
 
     def chooseWhichCakeSizeToTryToKeep(self, cake):
         """Choose which cake size to try to keep."""
@@ -24,4 +25,4 @@ class FairPlayer (Player):
             return self.desiredPercentOfCake 
       
         else:
-            return super().chooseWhichCakeSizeToTryToKeep()
+            return super().chooseWhichCakeSizeToTryToKeep(cake)

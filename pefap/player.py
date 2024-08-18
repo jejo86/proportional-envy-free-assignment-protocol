@@ -26,10 +26,26 @@ class Player:
     
     def informAboutGameState(self, game):
         """Inform the player about the current game state."""
-        # Set how much cake the others deserve.
-        self.otherPlayersDeservedPercentOfCake = min(self.desiredPercentOfCake, round(random.random() * 100, 3)) 
         # Save the amount of active players.
         self.amountOfActivePlayers = len(game.activePlayers)
+
+        # Only before the game starts.     
+        if game.currentRound == 0:
+            # Set how much cake the others deserve, knowing how much there are.
+            self.updateAmountTheOthersDeserve(game.cake.sizeInPercent)   
+
+        # Check if there is enough cake to get what I deserve.
+        if game.cake.sizeInPercent < self.desiredPercentOfCake:
+            print(f"{type(self).__name__} {self.identifier}: The available {game.cake} % is less than the {self.desiredPercentOfCake:.3f} % I wanted. I want the rest!!!")
+            self.desiredPercentOfCake = game.cake.sizeInPercent
+            # Adapt the percentage I think the others deserve.
+            self.updateAmountTheOthersDeserve(game.cake.sizeInPercent)   
+            print(f"{type(self).__name__} {self.identifier}: Set the percentage the others deserve to {self.otherPlayersDeservedPercentOfCake}")     
+
+    def updateAmountTheOthersDeserve(self, cakeSizeInPercent):
+        """Update the amount the others deserve."""
+        # Divide the remaining percent by the amount of players.
+        self.otherPlayersDeservedPercentOfCake = round((cakeSizeInPercent-self.desiredPercentOfCake)/self.amountOfActivePlayers, 3)
 
     def cutInitialPieceOfCake(self, cake):
         # Split the cake, if there are only two players left.
@@ -77,6 +93,6 @@ class Player:
             return cake.sizeInPercent - cake.smallestFraction
         else:
             # There are players after me. Make sure they don't get more than they deserve.
-            print(f"{type(self).__name__} {self.identifier}: I am reducing the cake to the maximum the others deserve!")
+            print(f"{type(self).__name__} {self.identifier}: I am reducing the cake to the maximum {self.otherPlayersDeservedPercentOfCake} the others deserve!")
             return self.otherPlayersDeservedPercentOfCake
 

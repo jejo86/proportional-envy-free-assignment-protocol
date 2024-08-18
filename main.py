@@ -12,8 +12,8 @@ def main():
     # Create a new game.
     game = Game(randomizePlayers)
     # Create some players.
-    game.createStandardPlayers(5)
-    game.createFairPlayers(1, False)
+    game.createStandardPlayers(30)
+    game.createFairPlayers(0, False)
 
     # Inform all players about the current game state.
     game.informAboutGameState()

@@ -19,7 +19,7 @@ class Player:
         """Constructor setting a player identifier."""
         self.identifier = identifier
         # Set a value for the desired percent of cake.
-        self.desiredPercentOfCake = random.random() * 100
+        self.desiredPercentOfCake = round(random.random() * 100, 3)
 
     def __str__(self) -> str:
         return f"{type(self).__name__} {self.identifier}: Desired: {self.desiredPercentOfCake:.3f}% / Others: {self.otherPlayersDeservedPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
@@ -27,7 +27,7 @@ class Player:
     def informAboutGameState(self, game):
         """Inform the player about the current game state."""
         # Set how much cake the others deserve.
-        self.otherPlayersDeservedPercentOfCake = min(self.desiredPercentOfCake, random.random() * 100)   
+        self.otherPlayersDeservedPercentOfCake = min(self.desiredPercentOfCake, round(random.random() * 100, 3)) 
         # Save the amount of active players.
         self.amountOfActivePlayers = len(game.activePlayers)
 
@@ -35,7 +35,7 @@ class Player:
         # Split the cake, if there are only two players left.
         if self.amountOfActivePlayers == 2:
             # Cut off half.
-            return cake.cutOffPercentage(cake.sizeInPercent/2) 
+            return cake.cutOffPercentage(round(cake.sizeInPercent/2, 3)) 
         
         # Check if there is enough cake left to get the desired portion.
         if self.desiredPercentOfCake <= cake.sizeInPercent:
@@ -53,7 +53,7 @@ class Player:
 
     def checkIfCakeIsDesirable(self, cake):
         # Check if there is enough cake left to get the desired portion.
-        if self.desiredPercentOfCake <= cake.sizeInPercent - cake.smallestFraction:
+        if self.desiredPercentOfCake <= round(cake.sizeInPercent - cake.smallestFraction, 3):
             print(f"{type(self).__name__} {self.identifier}: {cake.sizeInPercent:.3f} % is enough to cut and get more than the {self.desiredPercentOfCake:.3f} % I wanted.")
             # I can cut off a piece and would still be happy with it.
             return True

@@ -10,14 +10,14 @@ class Cake:
 
     def __init__(self, sizeInPercent = 100.0):
         """Constructor setting the percentage of cake represented by this object."""
-        self.sizeInPercent = sizeInPercent
+        self.sizeInPercent = round(sizeInPercent, 3)
     
     def __str__(self) -> str:
         return f"Cake:{self.sizeInPercent:.3f}%"
 
     def printState(self):
         """Print the current state of the cake."""
-        print(f"Cake is at {self.sizeInPercent} %")
+        print(f"Cake is at {self.sizeInPercent:.3f} %")
     
     def cutOffPercentage(self, percentageToCut):
         """Cut off and return a percentage of the cake."""
@@ -26,7 +26,7 @@ class Cake:
             # Reduce 'this' cake by the amount cut off.
             self.sizeInPercent -= percentageToCut
             # Return a cake by the amount cut off.
-            return Cake(percentageToCut)
+            return Cake(round(percentageToCut, 3))
         
         # Throw an error, since there is not enough cake left.
         raise ValueError(f"Cannot cut off {percentageToCut:.3f}%! Only {self.sizeInPercent:.3f}% left.")
@@ -39,12 +39,17 @@ class Cake:
         # Reintegrate the cut piece of cake into this cake.
         self.sizeInPercent += cutPieceOfCake.sizeInPercent
 
+        # Round
+        self.sizeInPercent = round(self.sizeInPercent, 3)
+
     def setOwner(self, player):
         """Set the owner of this piece of cake."""
-        # Associate a player to this piece of cake.
-        self.owningPlayer = player
-        # Associate this piece of cake to the player.
-        self.owningPlayer.ownedPieceOfCake = self
+        # Make sure this cake is not negligible.
+        if self.sizeInPercent >= self.smallestFraction:
+            # Associate a player to this piece of cake.
+            self.owningPlayer = player
+            # Associate this piece of cake to the player.
+            self.owningPlayer.ownedPieceOfCake = self
 
     def removeOwner(self):
         """Remove the ownership of this piece of cake."""

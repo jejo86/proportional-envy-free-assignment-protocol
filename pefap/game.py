@@ -3,12 +3,14 @@ import random
 
 # PEFAP Code
 from pefap.player import Player
+from pefap.players.fair import FairPlayer
+
 from pefap.cake import Cake
 
 class Game:
     """The rules of the game."""
 
-    amountOfPlayers = None
+    amountOfPlayers = 0
 
     activePlayers = []
     finishedPlayers = []
@@ -19,17 +21,25 @@ class Game:
 
     cake = None
 
-    def __init__(self, amountOfPlayers = 10, randomizePlayers = False):
+    def __init__(self, randomizePlayers = False):
         """Constructor for a new game."""
-        # Initialize the players.
-        self.amountOfPlayers = amountOfPlayers
-        self.createPlayers(amountOfPlayers)
+
 
         # Define whether to randomize the players in each iteration.
         self.randomizePlayers = randomizePlayers
 
         # Create the cake.
         self.cake = Cake()
+    
+    def createPlayers(self, amountOfStandardPlayers, amountOfFairPlayers):
+        """Create the players of the game."""
+        # Initialize the players.
+        self.createStandardPlayers(amountOfStandardPlayers)
+        self.createFairPlayers(amountOfFairPlayers)
+
+        # Inform all players about the total amount of players.
+        for player in self.activePlayers:
+            player.informAboutAmountOfPlayers(self.amountOfPlayers)
 
     def run(self):
         """Run the game."""
@@ -93,11 +103,23 @@ class Game:
         self.cake.setOwner(self.activePlayers[0])
         self.movePlayerToFinishers(self.activePlayers[0])
 
+    def createStandardPlayers(self, N):
+        """Create and append standard players."""
+        # Increase the member variable by the amount of players to create.
+        self.amountOfPlayers += N
 
-    def createPlayers(self, N):
-        """Create a list containing N players."""
+        # Actually create and append the standard players.
         for i in range(N):
-            self.activePlayers.append(Player(i, random.random()*100))
+            self.activePlayers.append(Player(i))
+        
+    def createFairPlayers(self, N):
+        """Create and append fair players."""
+        # Increase the member variable by the amount of players to create.
+        self.amountOfPlayers += N
+
+        # Actually create and append the fair players.
+        for i in range(N):
+            self.activePlayers.append(FairPlayer(i))
 
     def movePlayerToFinishers(self, player):
         """Move player from the active onew to the finishers."""

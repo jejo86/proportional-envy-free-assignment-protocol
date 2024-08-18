@@ -11,14 +11,19 @@ class Player:
 
     ownedPieceOfCake = None
 
-    def __init__(self, identifier, desiredPercentOfCake):
+    def __init__(self, identifier):
         """Constructor setting a player identifier."""
         self.identifier = identifier
-        self.desiredPercentOfCake = desiredPercentOfCake
 
     def __str__(self) -> str:
-        return f"Player {self.identifier} - Desired: {self.desiredPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
+        return f"{type(self).__name__} {self.identifier} - Desired: {self.desiredPercentOfCake:.3f}% / Received: {self.ownedPieceOfCake}"
     
+    def informAboutAmountOfPlayers(self, amountOfPlayers):
+        """Inform the player about the amount of player, to potentially adapt his strategy."""
+        # The default player does not adapt his strategy and sets a default
+        # value for the desired percent of cake.
+        self.desiredPercentOfCake = random.random() * 100
+
     def cutInitialPieceOfCake(self, cake):
         # Check if there is enough cake left to get the desired portion.
         if self.desiredPercentOfCake <= cake.sizeInPercent:
@@ -26,7 +31,7 @@ class Player:
             return cake.cutOffPercentage(self.desiredPercentOfCake) 
         # There is not as much left as desired.
         # Get the entire cake instead.
-        print(f"Player {self.identifier}: The available {cake.sizeInPercent:.3f} % is less than the {self.desiredPercentOfCake:.3f} % I wanted, but I'll take it...")
+        print(f"{type(self).__name__} {self.identifier}: The available {cake.sizeInPercent:.3f} % is less than the {self.desiredPercentOfCake:.3f} % I wanted, but I'll take it...")
         return cake.cutOffPercentage(cake.sizeInPercent)
 
     def checkIfCakeIsDesirable(self, cake):
@@ -35,13 +40,13 @@ class Player:
             return True
         
         # That is too little cake for me.
-        print(f"Player {self.identifier}: {cake.sizeInPercent:.3f} % is too little for me... I want at least {self.desiredPercentOfCake:.3f} %")
+        print(f"{type(self).__name__} {self.identifier}: {cake.sizeInPercent:.3f} % is too little for me... I want at least {self.desiredPercentOfCake:.3f} %")
         return False
 
     def chooseWhichCakeSizeToTryToKeep(self, cake):
         """Choose which cake size to try to keep."""
         # Try to keep the entire piece of cake minus the smallest fraction 
         # possible to comply to the rules of the game.
-        print(f"Player {self.identifier}: I am reducing the cake size by the smallest fraction possible!")
+        print(f"{type(self).__name__} {self.identifier}: I am reducing the cake size by the smallest fraction possible!")
         return cake.sizeInPercent - sys.float_info.min
 

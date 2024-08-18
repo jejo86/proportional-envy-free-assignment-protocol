@@ -21,6 +21,8 @@ class Game:
 
     cake = None
 
+    currentRound = 0
+
     def __init__(self, randomizePlayers = False):
         """Constructor for a new game."""
         # Define whether to randomize the players in each iteration.
@@ -41,11 +43,11 @@ class Game:
             self.amountOfPlayers += 1
             self.activePlayers.append(FairPlayer(self.amountOfPlayers, reduceLargeToFairPiece))
 
-    def informAboutAmountOfPlayers(self):
+    def informAboutGameState(self):
         """Inform all players about the total amount of players."""
         for player in self.activePlayers:
-            player.informAboutAmountOfPlayers(self.amountOfPlayers)
-            
+            player.informAboutGameState(self)
+
     def run(self):
         """Run the game."""
 
@@ -57,16 +59,18 @@ class Game:
         for player in self.activePlayers:
             print(f"{player}")
 
-        # A round counter
-        roundCounter = 0
+        # The current round.
+        self.currentRound = 0
         # Run as long as there is more than one active player.
         while len(self.activePlayers) > 1:
             # Increase the round counter.
-            roundCounter += 1
-            # Inform about the current round.
+            self.currentRound += 1
             
+            # Inform all players about the current round characteristics.
+            self.informAboutGameState()
+
             print("\n-------------------------------------")
-            print(f"Starting round {roundCounter}.")
+            print(f"Starting round {self.currentRound}.")
             print("-------------------------------------")
 
             # Check if there is cake left.
@@ -125,6 +129,11 @@ class Game:
         """
         # Skip the first player, as that is the one who cut the cake.
         for i in range(1, len(self.activePlayers)):
+            # Get the amount of players after the current one.
+            playersAfter = len(self.activePlayers) - i - 1
+            # Inform player about the amount of players who can decide after him.
+            self.activePlayers[i].startOfCakeAnalysis(playersAfter)
+
             # Check if player would like a smaller fraction of that piece of cake.
             if self.activePlayers[i].checkIfCakeIsDesirable(pieceOfCake):
                 # Cake is desirable to player. He must reduce the size of 

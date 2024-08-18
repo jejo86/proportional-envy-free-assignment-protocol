@@ -12,10 +12,11 @@ def main():
     # Create a new game.
     game = Game(randomizePlayers)
     # Create some players.
-    game.createStandardPlayers(0)
-    game.createFairPlayers(3, True)
-    # Inform all players about the total amount of players.
-    game.informAboutAmountOfPlayers()
+    game.createStandardPlayers(5)
+    game.createFairPlayers(0, True)
+
+    # Inform all players about the current game state.
+    game.informAboutGameState()
 
     # Run the game.
     game.run()
